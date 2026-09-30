@@ -7,6 +7,7 @@ import pandas as pd
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -32,7 +33,7 @@ def take_screenshot(position, person, num, soup, tag, type, name):
     table = soup.findAll(tag, {type: name})[0]
     time.sleep(1)
     xmap = xpath_soup(table)
-    element = browser.find_element_by_xpath(xmap)
+    element = browser.find_element(By.XPATH, xmap)
     location = element.location
     size = element.size
     png = browser.get_screenshot_as_png()
@@ -52,12 +53,12 @@ def take_screenshot(position, person, num, soup, tag, type, name):
 def login(user, pwd):
     browser.implicitly_wait(50)
 
-    usr = browser.find_element_by_id('username')
+    usr = browser.find_element(By.ID, 'username')
     usr.send_keys(user)  # admn no here
-    passwd = browser.find_element_by_id('password')
+    passwd = browser.find_element(By.ID, 'password')
     passwd.send_keys(pwd)  # password here
     time.sleep(1)
-    browser.find_element_by_class_name('navbtn').click()
+    browser.find_element(By.CLASS_NAME, 'navbtn').click()
     time.sleep(1)
     # καρτέλα οφειλών
     time.sleep(1)
@@ -78,7 +79,7 @@ def make_single_debt():
         for point, i in enumerate(single_debts):
             time.sleep(1)
             target = xpath_soup(single_debts[point])
-            browser.find_element_by_xpath(target).click()
+            browser.find_element(By.XPATH, target).click()
             browser.implicitly_wait(50)
             time.sleep(1)
             debt_soup = BeautifulSoup(browser.page_source, features="html.parser")
@@ -95,7 +96,7 @@ def make_single_debt():
             time.sleep(1)
 
     except Exception as error:
-        print(f'Something is wrong with this person:: {name} {pwd} {point}', error)
+        print(f'Something is wrong with this person:: {name} {point}', error)
 
 
 def make_rhyme():
@@ -109,7 +110,7 @@ def make_rhyme():
         for count, i in enumerate(rhyme):
             time.sleep(1)
             target = xpath_soup(rhyme[count])
-            browser.find_element_by_xpath(target).click()
+            browser.find_element(By.XPATH, target).click()
             try:
                 WebDriverWait(browser, 2).until(EC.alert_is_present(),
                                                 'Timed out waiting for PA creation ' +
@@ -135,22 +136,20 @@ def make_rhyme():
             # log_off()
 
     except Exception as err:
-        print(f'Something is wrong with this person at adjustments:: {name} {pwd} {count}', err)
+        print(f'Something is wrong with this person at adjustments:: {name} {count}', err)
 
 
 if __name__ == '__main__':
 
-    dirname = os.path.abspath(__file__)
     url = 'https://www1.gsis.gr/taxisnet/mytaxisnet'
 
     start = time.perf_counter()
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    cromium_path = os.path.split(dirname)[0] + '\\chromedriver.exe'
+    chrome_options.add_argument("--headless=new")
     db = pd.read_csv(os.environ['DB'], sep=',', encoding='1253', dtype=str)
     for name, pwd in zip(db[db.columns[3]].values, db[db.columns[4]].values):
         print(f'[+] {db.loc[db[db.columns[3]] == name, db.columns[0]].values[0]} {db.loc[db[db.columns[3]] == name, db.columns[1]].values[0]}')
-        browser = webdriver.Chrome(cromium_path, options=chrome_options)
+        browser = webdriver.Chrome(options=chrome_options)
         browser.implicitly_wait(30)
         browser.get(url)
         time.sleep(2)

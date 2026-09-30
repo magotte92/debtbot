@@ -18,9 +18,9 @@ def made_debts(path, name):
                 total_debt = reader[21]
                 reason = reader[13]
                 id = reader[29]
-                if re.findall('([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})', reader[-12].replace('\n', '')):
+                if re.findall(r'([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})', reader[-12].replace('\n', '')):
                     date = \
-                    re.findall('([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})', reader[-12].replace('\n', ''))[
+                    re.findall(r'([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})', reader[-12].replace('\n', ''))[
                         0][0]
 
                     if not os.path.isdir(my_path):
@@ -61,9 +61,9 @@ def make_rhyme(path, name):
                 dosage = reader[17]
                 reason = reader[9]
                 id = reader[21]
-                if re.findall('([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})', reader[16].replace('\n', '')):
+                if re.findall(r'([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})', reader[16].replace('\n', '')):
                     date = \
-                        re.findall('([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})',
+                        re.findall(r'([1-9]{1,2}[.\/-]{1}([1-9]|1[012])[.\/-]{1}[0-9]{2,4})',
                                    reader[16].replace('\n', ''))[
                             0][0]
 

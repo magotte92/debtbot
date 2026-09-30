@@ -2,25 +2,26 @@ import os
 import time
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import pandas as pd
 
 
 def login(user, pwd):
-    user_box = browser.find_element_by_id('rcmloginuser')
+    user_box = browser.find_element(By.ID, 'rcmloginuser')
     user_box.send_keys(user)  # admn no here
-    secret_box = browser.find_element_by_id('rcmloginpwd')
+    secret_box = browser.find_element(By.ID, 'rcmloginpwd')
     secret_box.send_keys(pwd)  # password here
-    login_btn = browser.find_element_by_id('rcmloginsubmit')
+    login_btn = browser.find_element(By.ID, 'rcmloginsubmit')
     login_btn.click()
 
 
 db = pd.read_csv('mail.csv', sep=',', encoding='1253', dtype=str)
 
 chrome_options = Options()
-chrome_options.add_argument('--headless')
-browser = webdriver.Chrome('./chromedriver.exe', options=chrome_options)
+chrome_options.add_argument('--headless=new')
+browser = webdriver.Chrome(options=chrome_options)
 browser.get(os.environ['URL'])
 time.sleep(1)
 login(os.environ['USER'], os.environ['PWD'])
@@ -30,7 +31,7 @@ base = os.path.join('src', 'debts')
 def send_msg(receiver, subject, text):
     def switch_body():
         ''' A function to switch back to the top of the message '''
-        body = browser.find_element_by_xpath('//*[@id="composebody"]')
+        body = browser.find_element(By.XPATH, '//*[@id="composebody"]')
         time.sleep(2)
         body.click()
         ActionChains(browser) \
@@ -49,37 +50,37 @@ def send_msg(receiver, subject, text):
             .perform()
 
         time.sleep(0.1)
-        browser.find_element_by_xpath('//*[@id="mceu_16-open"]').click()  # open font menu
+        browser.find_element(By.XPATH, '//*[@id="mceu_16-open"]').click()  # open font menu
         time.sleep(0.1)
-        browser.find_element_by_xpath('//*[@id="mceu_45"]').click()  # pick font
+        browser.find_element(By.XPATH, '//*[@id="mceu_45"]').click()  # pick font
         time.sleep(0.1)
-        browser.find_element_by_xpath('//*[@id="mceu_17-open"]').click()  # open font size menu
+        browser.find_element(By.XPATH, '//*[@id="mceu_17-open"]').click()  # open font size menu
         time.sleep(0.1)
-        browser.find_element_by_xpath('//*[@id="mceu_65"]').click()  # pick size
+        browser.find_element(By.XPATH, '//*[@id="mceu_65"]').click()  # pick size
 
-    browser.find_element_by_xpath('//*[@id="rcmbtn108"]').click()  # create a new message
-    browser.switch_to.window(window_name=browser.window_handles[0])
+    browser.find_element(By.XPATH, '//*[@id="rcmbtn108"]').click()  # create a new message
+    browser.switch_to.window(browser.window_handles[0])
     time.sleep(3)
 
-    browser.find_element_by_xpath('//*[@id="_to"]').send_keys(receiver)  # enter the receiver
+    browser.find_element(By.XPATH, '//*[@id="_to"]').send_keys(receiver)  # enter the receiver
     time.sleep(0.2)
-    browser.find_element_by_xpath('//*[@id="compose-subject"]').send_keys(subject)  # enter subject
+    browser.find_element(By.XPATH, '//*[@id="compose-subject"]').send_keys(subject)  # enter subject
     time.sleep(0.2)
     switch_body()
     time.sleep(0.2)
     for i in text:
-        browser.find_element_by_xpath('//*[@id="composebody"]').send_keys(i)
-        browser.find_element_by_xpath('//*[@id="composebody"]').send_keys(Keys.ENTER)
+        browser.find_element(By.XPATH, '//*[@id="composebody"]').send_keys(i)
+        browser.find_element(By.XPATH, '//*[@id="composebody"]').send_keys(Keys.ENTER)
     time.sleep(0.2)
-    browser.find_element_by_xpath('//*[@id="composeoptions"]/span[1]/label/select').click()  # open option menu
+    browser.find_element(By.XPATH, '//*[@id="composeoptions"]/span[1]/label/select').click()  # open option menu
     time.sleep(0.2)
-    browser.find_element_by_xpath('//*[@id="composeoptions"]/span[1]/label/select/option[1]').click()  # pick html
+    browser.find_element(By.XPATH, '//*[@id="composeoptions"]/span[1]/label/select/option[1]').click()  # pick html
     alert = browser.switch_to.alert  # switch to alert
     alert.accept()  # accept the alert
 
     time.sleep(5)
     pick_font()
-    browser.find_element_by_xpath('//*[@id="rcmbtn107"]').click()  # send message
+    browser.find_element(By.XPATH, '//*[@id="rcmbtn107"]').click()  # send message
     time.sleep(5)
 
 
