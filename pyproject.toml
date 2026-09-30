@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+# Syntax errors and names that would crash at runtime. Existing style is left alone.
+select = ["E9", "F63", "F7", "F82"]
